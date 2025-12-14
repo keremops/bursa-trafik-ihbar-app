@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1e293b">
+    <link rel="manifest" href="manifest.json">
+    <meta name="description" content="Bursa Trafik İhlal Bildirim Aracı">
+    <title>Bursa Trafik İhbar Hazırlayıcı</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-gray-100 text-slate-800 font-sans antialiased pb-28 select-none">
+
+    <header class="bg-slate-900 text-white p-4 shadow-lg sticky top-0 z-40 backdrop-blur-sm bg-opacity-95">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 p-2 rounded-lg">
+                    <i class="fa-solid fa-shield-halved text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-wide leading-tight">Trafik İhbar Hazırlayıcı</h1>
+                    <p class="text-[10px] text-gray-400 font-mono tracking-wider">BURSA | Release v1.1.0</p>
+                </div>
+            </div>
+            <div class="flex flex-col items-end">
+                <span class="text-[10px] uppercase tracking-wider bg-green-900 text-green-300 px-2 py-0.5 rounded border border-green-700">Open Source</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 max-w-xl mt-2 space-y-5">
+        <div class="bg-blue-50 border-l-4 border-blue-600 p-4 rounded-r shadow-sm text-sm flex gap-3">
+            <i class="fa-solid fa-circle-info text-blue-600 mt-1"></i>
+            <div class="text-blue-900 leading-relaxed text-xs">
+                Bu araç, verilerinizi cihazınızda işler. Sunucuya veri gönderilmez. Kanıt görselleri mail aşamasında eklenmelidir.
+            </div>
+        </div>
+
+        <form id="violationForm" class="space-y-5">
+            <div class="bg-white p-1 rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-4 py-2 border-b border-gray-100 flex justify-between items-center">
+                    <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider">1. Kanıt ve Konum</h2>
+                    <i class="fa-solid fa-camera text-gray-300"></i>
+                </div>
+                <div class="p-4">
+                    <div class="relative group">
+                        <input type="file" id="mediaInput" accept="image/*,video/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center transition group-hover:border-blue-500 group-hover:bg-blue-50 bg-slate-50">
+                            <i class="fa-solid fa-cloud-arrow-up text-xl text-blue-500 mb-3"></i>
+                            <p class="text-sm font-bold text-gray-700" id="uploadText">Kanıt Yükle</p>
+                            <p class="text-[10px] text-gray-400 mt-1">Fotoğraf (EXIF) veya Video</p>
+                        </div>
+                    </div>
+                    <div id="fileStatus" class="hidden mt-4 bg-slate-50 rounded-lg border border-slate-200 overflow-hidden">
+                        <div class="p-3 grid grid-cols-2 gap-2 text-xs">
+                            <div class="col-span-2 flex justify-between font-bold text-slate-700 border-b pb-2 mb-1">
+                                <span id="fileName" class="truncate pr-2">Dosya Adı</span>
+                                <span id="fileSize">Boyut</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-slate-600"><i class="fa-regular fa-calendar"></i><span id="metaDate">Tarih Bekleniyor</span></div>
+                            <div class="flex items-center gap-2 text-slate-600"><i class="fa-solid fa-location-dot"></i><span id="metaLoc">Konum Bekleniyor</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-1 rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-4 py-2 border-b border-gray-100 flex justify-between items-center">
+                    <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider">2. Olay Detayları</h2>
+                    <i class="fa-solid fa-car-side text-gray-300"></i>
+                </div>
+                <div class="p-4 space-y-4">
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Araç Plakası</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><span class="bg-blue-700 text-white text-[10px] px-1 rounded font-bold">TR</span></div>
+                            <input type="text" id="plate" placeholder="16 XXX XX" class="pl-10 w-full bg-gray-50 border border-gray-300 text-gray-900 text-xl font-bold rounded-lg focus:ring-blue-500 block p-3 uppercase font-mono tracking-widest" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">İhlal Türü</label>
+                        <div class="relative">
+                            <select id="violationType" class="appearance-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 block w-full p-3 pr-8">
+                                <option value="park_kaldirim">Hatalı Park (Kaldırım Üzeri)</option>
+                                <option value="park_engelli">Hatalı Park (Engelli Yeri)</option>
+                                <option value="park_durak">Hatalı Park (Durak İhlali)</option>
+                                <option value="park_yaya">Hatalı Park (Yaya Geçidi)</option>
+                                <option value="serit_ihlali">Tehlikeli Şerit / Makas</option>
+                                <option value="ters_yon">Ters Yön İhlali</option>
+                                <option value="kirmizi_isik">Kırmızı Işık İhlali</option>
+                                <option value="other">Diğer (Elle Giriniz)</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"><i class="fa-solid fa-chevron-down text-xs"></i></div>
+                        </div>
+                        <input type="text" id="customViolation" class="hidden mt-2 w-full bg-white border border-blue-300 text-sm rounded-lg p-3 shadow-inner" placeholder="İhlali kısaca açıklayınız...">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Tarih</label><input type="date" id="date" class="w-full bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5"></div>
+                        <div><label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Saat</label><input type="time" id="time" class="w-full bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5"></div>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Olay Yeri Adresi</label>
+                        <div class="relative">
+                            <textarea id="location" rows="2" class="block p-3 w-full text-sm bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500" placeholder="Otomatik alınır..."></textarea>
+                            <div id="locationLoader" class="hidden absolute right-3 bottom-3 text-blue-600 bg-white px-2 py-1 rounded shadow text-xs flex items-center gap-1"><i class="fa-solid fa-circle-notch fa-spin"></i> Çözümleniyor</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-1 rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-4 py-2 border-b border-gray-100 flex justify-between items-center">
+                    <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider">3. İhbarcı Bilgileri</h2>
+                    <i class="fa-solid fa-user-shield text-gray-300"></i>
+                </div>
+                <div class="p-4 space-y-3">
+                    <input type="text" id="reporterName" placeholder="Adınız Soyadınız" class="bg-gray-50 border border-gray-300 text-sm rounded-lg block w-full p-3">
+                    <input type="tel" id="reporterPhone" placeholder="Telefon Numaranız" class="bg-gray-50 border border-gray-300 text-sm rounded-lg block w-full p-3">
+                    <div class="flex items-center justify-between mt-2 pt-2 border-t border-dashed">
+                        <label for="rememberMe" class="text-xs text-gray-600 font-medium cursor-pointer select-none">Bilgilerimi bu cihazda hatırla</label>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                            <input type="checkbox" id="rememberMe" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-gray-300 transition-all duration-300 right-5 top-0"/>
+                            <label for="rememberMe" class="toggle-label block overflow-hidden h-5 rounded-full bg-gray-300 cursor-pointer"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <div class="fixed bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur border-t border-gray-200 z-30 safe-area-bottom">
+        <div class="container mx-auto max-w-xl">
+            <button onclick="openPreviewModal()" class="w-full text-white bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-800 font-bold rounded-xl text-sm px-5 py-4 shadow-lg shadow-blue-500/30 flex justify-center items-center gap-2">
+                <span>TASLAĞI OLUŞTUR</span><i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="previewModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+        <div class="flex min-h-full items-end justify-center p-0 sm:items-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-t-2xl sm:rounded-2xl bg-white text-left shadow-2xl transition-all w-full sm:max-w-lg h-[85vh] sm:h-auto flex flex-col">
+                <div class="bg-white px-4 py-3 border-b flex justify-between items-center">
+                    <h3 class="text-md font-bold text-gray-800">Mail Önizleme</h3>
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="p-4 flex-1 overflow-y-auto bg-gray-50">
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3 text-xs text-yellow-800 flex gap-2">
+                        <i class="fa-solid fa-triangle-exclamation mt-0.5"></i><p>Mail uygulaması açıldığında <strong>KANIT DOSYASINI</strong> eklemeyi unutmayınız.</p>
+                    </div>
+                    <textarea id="finalTextPreview" class="w-full h-full min-h-[300px] p-4 text-sm text-slate-800 border border-gray-300 rounded-lg bg-white font-mono leading-relaxed resize-none focus:ring-2 focus:ring-blue-500 outline-none" spellcheck="false"></textarea>
+                </div>
+                <div class="bg-white p-4 border-t flex flex-col gap-3 safe-area-bottom">
+                    <button type="button" onclick="sendMail()" class="w-full justify-center rounded-xl bg-green-600 px-3 py-3.5 text-sm font-bold text-white shadow hover:bg-green-500 flex items-center gap-2"><i class="fa-solid fa-envelope-open-text"></i> Mail Uygulamasına Aktar</button>
+                    <button type="button" onclick="copyToClipboard()" class="w-full justify-center rounded-xl bg-white px-3 py-3.5 text-sm font-bold text-gray-700 border border-gray-300 shadow-sm hover:bg-gray-50 flex items-center gap-2"><i class="fa-regular fa-copy"></i> Metni Kopyala</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+/* Mobil UX İyileştirmeleri */
+body { 
+    -webkit-tap-highlight-color: transparent; 
+    overscroll-behavior-y: none; 
+}
+
+.modal-open { 
+    overflow: hidden; 
+}
+
+/* iOS Input Gölgelerini Kaldır */
+input, textarea, select { 
+    -webkit-appearance: none; 
+    appearance: none; 
+}
+
+/* Toggle Switch Animasyonu */
+.toggle-checkbox:checked { 
+    right: 0; 
+    border-color: #3b82f6; 
+}
+.toggle-checkbox:checked + .toggle-label { 
+    background-color: #3b82f6; 
+}
+
+/* Alt Bar Güvenli Alanı (iPhone X ve üzeri için) */
+.safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+}
