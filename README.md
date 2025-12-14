@@ -1,5 +1,6 @@
 # 🚦 Bursa Trafik İhbar Hazırlayıcı (v1.1.0)
 
+[![Canlı Sürüm](https://img.shields.io/badge/Canlı_Sürüm-Git_Pages-orange)](https://keremops.github.io/bursa-trafik-ihbar-app/)
 ![Sürüm](https://img.shields.io/badge/version-1.1.0-blue)
 ![Lisans](https://img.shields.io/badge/license-MIT-green)
 ![Durum](https://img.shields.io/badge/status-stable-success)
@@ -7,6 +8,12 @@
 **Bursa Trafik İhbar Hazırlayıcı**, vatandaşların trafik kuralı ihlallerini (hatalı park, kırmızı ışık vb.) kolayca raporlamalarını sağlamak amacıyla geliştirilmiş, **istemci tabanlı (client-side)** ve açık kaynaklı bir web aracıdır.
 
 Bu proje, fotoğraflardaki EXIF verilerini okuyarak konum ve tarih bilgisini otomatik doldurur, resmi bir dilekçe metni oluşturur ve cihazınızın mail uygulamasına aktarır.
+
+## 🌐 Canlı Kullanım (Live Demo)
+
+Uygulamayı herhangi bir kurulum yapmadan, doğrudan tarayıcınız üzerinden kullanabilirsiniz:
+
+👉 **[Uygulamayı Aç: keremops.github.io/bursa-trafik-ihbar-app](https://keremops.github.io/bursa-trafik-ihbar-app/)**
 
 ---
 
@@ -39,24 +46,17 @@ BursaTrafikDenetim/
         └── utils.js      # Yardımcı fonksiyonlar (Tarih, GPS vb.)
 ````
 
-## 🛠️ Kurulum ve Çalıştırma
+## 🛠️ Yerel Kurulum (Opsiyonel)
 
-Bu proje herhangi bir veritabanı veya backend kurulumu gerektirmez.
+Eğer projeyi kendi bilgisayarınızda geliştirmek isterseniz:
 
-### Yöntem 1: Yerel Sunucu (Tavsiye Edilen)
-
-Python yüklü bir bilgisayarda projeyi yerel ağda yayınlayıp telefonunuzdan erişebilirsiniz.
-
-1.  Proje klasöründe terminal açın.
-2.  Aşağıdaki komutu çalıştırın:
+1.  Proje klasörünü indirin.
+2.  Terminali açın ve dizine gidin.
+3.  Python sunucusunu başlatın:
     ```bash
     python server.py
     ```
-3.  Terminalde çıkan IP adresini (Örn: `http://192.168.1.XX:8000`) telefonunuzun tarayıcısına girin.
-
-### Yöntem 2: Statik Hosting
-
-`index.html` ve `assets` klasörünü GitHub Pages, Vercel veya Netlify gibi statik dosya sunucularına yükleyerek anında yayına alabilirsiniz.
+4.  Terminalde verilen IP adresinden (Örn: `http://localhost:8000`) erişim sağlayın.
 
 ## ⚠️ Yasal Uyarı (Disclaimer)
 
